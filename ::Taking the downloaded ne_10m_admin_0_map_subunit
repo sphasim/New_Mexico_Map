@@ -1,0 +1,28 @@
+//Taking the downloaded ne_10m_admin_0_map_subunits.shp as input, use ogr2ogr to create the subunits.json GeoJSON file:
+
+ogr2ogr \
+  -f GeoJSON \
+  -where "ADM0_A3 IN ('GBR', 'IRL')" \
+  subunits.json \
+  ne_10m_admin_0_map_subunits.shp
+
+//The -where argument implies a filter: only features whose ADM0_A3 property equals "GBR" or "IRL" will be in the output GeoJSON. Here, ADM0 refers to Admin-0, the highest level administrative boundaries, and A3 refers to ISO 3166-1 alpha-3 country codes. Despite mapping only the United Kingdom, we need all of Ireland to portray land accurately; otherwise, we might give the mistaken impression that Northern Ireland is an island unto itself!
+
+
+
+Next we’ll filter the populated places. The places’ properties are (somewhat arbitrarily) different, so the where clause refers to ISO_A2 instead. The SCALERANK filter further whittles the labels down to major cities
+ogr2ogr \
+  -f GeoJSON \
+  -where "ISO_A2 = 'GB' AND SCALERANK < 8" \
+  places.json \
+  ne_10m_populated_places.shp
+
+
+
+  And last we combine subunits.json and places.json into a single uk.json. This step includes a minor transformation to fix inconsistencies in the source data, renaming the NAME property to name, and promoting the SU_A3 property to the object id.
+
+
+ogr2ogr \
+  -f GeoJSON \
+  NM_counties.json \
+  NMCounty_Boundaries.shp

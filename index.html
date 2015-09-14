@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HTML5</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=650, user-scalable=yes">
+
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+  </script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+  <script src="http://d3js.org/topojson.v1.min.js"></script>
+
+  <style>
+
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+
+    #mapcanvas{
+
+      height:100%;
+    }
+
+  </style>
+
+  <script>
+
+
+   var geoJsonObject;
+   var thejson;
+
+   $(document).ready(function(){
+
+
+
+  var mapOptions = {
+    zoom: 7,
+    center: new google.maps.LatLng(34.1107, -105.6100),
+    mapTypeId: google.maps.MapTypeId.TERRAIN
+  };
+
+  map=new google.maps.Map($('#mapcanvas')[0], mapOptions);
+
+//county.json is a topojson file
+
+  $.getJSON("usa.json", function(data){
+        geoJsonObject = topojson.feature(data, data.objects.cb_2014_us_state_500k)
+        map.data.addGeoJson(geoJsonObject); 
+        console.log(geoJsonObject)
+      }); 
+console.log(geoJsonObject)
+
+
+  });//end document ready
+
+
+ </script>
+ 
+</head>
+<body>
+  <div id="mapcanvas">
+  </div>
+</body>
+
+
+</html>
